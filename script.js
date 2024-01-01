@@ -1,13 +1,21 @@
 const gameWrapper = document.getElementById("game-wrapper");
 const gameStart = document.getElementById("game-start");
+const gamePause = document.getElementById("game-pause");
+const gameOverlay = document.getElementById("game-overlay");
+const gameOver = document.getElementById("game-over");
 
 const gameTime = document.getElementById("game-time");
 const gameScore = document.getElementById("game-score");
 const gameFail = document.getElementById("game-fail");
 const gamePlayer = document.getElementById("game-user");
 
-const restartButton = document.getElementById("restart-button");
+const continueButton = document.getElementById("continue-button");
+const restartButtonOver = document.getElementById("restart-button-game-over");
+const restartBoardPause = document.getElementById("restart-button-game-pause");
+const restartButtonBoard = document.getElementById("restart-button-game-board");
 const quitButton = document.getElementById("quit-button");
+
+// console.log(restartBoard);
 
 let intervalId;
 let seconds = 0;
@@ -18,6 +26,8 @@ let ctx;
 
 let score = 0;
 let failCount = 0;
+let virusInterval;
+let virusGenerationInterval;
 let viruses = [];
 
 let isPaused = false;
@@ -32,6 +42,8 @@ const keyPosition = {
 };
 
 gameWrapper.style.display = "none";
+gameOver.style.display = "none";
+gamePause.style.display = "none";
 
 // Start Game
 document.getElementById("start-game").addEventListener("click", function (e) {
@@ -53,9 +65,122 @@ document.getElementById("start-game").addEventListener("click", function (e) {
   startTimer();
 
   // Start generating viruses
-  setInterval(generateVirus, 2000); // Adjust the interval as needed
+  virusGenerationInterval = setInterval(generateVirus, 2000); // Adjust the interval as needed
   intervalId = setInterval(gameLoop, 1000 / 60);
 });
+
+// Continue Game
+continueButton.addEventListener("click", function (e) {
+  e.preventDefault();
+  togglePause();
+});
+
+// Reset Game
+function resetGame() {
+  gameOver.style.display = "none";
+  gameOverlay.style.display = "none";
+
+  console.log("restarted");
+  seconds = 0;
+  minutes = 0;
+  score = 0;
+  failCount = 0;
+  viruses = [];
+
+  // Clear Virus Interval
+  clearInterval(virusInterval);
+
+  virusInterval = setInterval(generateVirus, 2000);
+
+  updateTimerDisplay();
+  updateScore();
+}
+
+// Reset game
+restartButtonOver.addEventListener("click", function (e) {
+  e.preventDefault();
+  resetGame();
+});
+
+// Reset game
+restartButtonBoard.addEventListener("click", function (e) {
+  e.preventDefault();
+  resetGame();
+});
+
+// Reset game
+restartBoardPause.addEventListener("click", function (e) {
+  e.preventDefault();
+  resetGame();
+});
+
+// Quit Game
+quitButton.addEventListener("click", function (e) {
+  e.preventDefault();
+  quitGame();
+});
+
+// Pause game
+function togglePause() {
+  isPaused = !isPaused;
+
+  // If paused, clear the interval
+  if (isPaused) {
+    clearInterval(intervalId);
+    gamePause.style.display = "block";
+    gameOverlay.style.display = "block";
+
+    console.log("Game paused");
+  } else {
+    gamePause.style.display = "none";
+    gameOverlay.style.display = "none";
+
+    // Loop game for 1second by 60 fps
+    intervalId = setInterval(gameLoop, 1000 / 60);
+    console.log("Game resumed");
+  }
+}
+
+// Quit Game
+function quitGame() {
+  localStorage.setItem("final-score", score);
+  localStorage.setItem(
+    "final-time",
+    `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+  );
+
+  clearInterval(virusGenerationInterval);
+  clearInterval(virusInterval);
+  viruses = [];
+
+  seconds = 0;
+  minutes = 0;
+  updateTimerDisplay();
+
+  score = 0;
+  updateScore();
+
+  displayGameOver();
+}
+
+// Display game over
+function displayGameOver() {
+  gamePause.style.display = "none";
+  gameOverlay.style.display = "block";
+  gameOver.style.display = "block";
+
+  const finalScore = localStorage.getItem("final-score") || 0;
+  const finalTime = localStorage.getItem("final-time") || "00:00";
+  const playerName = localStorage.getItem("player-name") || "NaN";
+
+  document.getElementById("game-over-time").textContent = `Time: ${finalTime}`;
+  document.getElementById(
+    "game-over-score"
+  ).textContent = `Score: ${finalScore}`;
+  document.getElementById(
+    "game-over-player"
+  ).textContent = `Player: ${playerName}`;
+}
 
 // Detect keyboard key
 document.addEventListener("keydown", function (event) {
@@ -72,22 +197,7 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
-function togglePause() {
-  isPaused = !isPaused;
-
-  // If paused, clear the interval
-  if (isPaused) {
-    clearInterval(intervalId);
-    console.log("Game paused");
-  } else {
-    // If unpaused, restart the interval
-    intervalId = setInterval(gameLoop, 1000 / 60);
-    console.log("Game resumed");
-  }
-}
-
-function showPauseBoard() {}
-
+// Start Timer
 function startTimer() {
   intervalId = setInterval(() => {
     // Check if the game is not paused
@@ -102,6 +212,7 @@ function startTimer() {
   }, 1000);
 }
 
+// Update Timer Display
 function updateTimerDisplay() {
   const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
     seconds
@@ -109,6 +220,7 @@ function updateTimerDisplay() {
   gameTime.textContent = `Time : ${formattedTime}`;
 }
 
+// Generate Virus
 function generateVirus() {
   const columnWidth = canvas.width / 4;
   const columnIndex = Math.floor(Math.random() * 4);
@@ -129,6 +241,7 @@ function generateVirus() {
   });
 }
 
+// Generate Virus Positions
 function updateVirusPositions() {
   for (let i = 0; i < viruses.length; i++) {
     viruses[i].y += viruses[i].speed;
@@ -142,6 +255,7 @@ function updateVirusPositions() {
   }
 }
 
+// Render Button
 function renderButtons() {
   const buttonSize = canvas.width / 4;
 
@@ -151,7 +265,7 @@ function renderButtons() {
     width: buttonSize,
     height: buttonSize,
     key: "D",
-    isShining: false, // Flag to track the shining state
+    isShining: false,
   };
 
   const buttonF = {
@@ -201,6 +315,7 @@ function renderButtons() {
   });
 }
 
+// Handle button when pressed
 function handleButtonClick(buttonKey) {
   console.log(buttonKey);
   const button = {
@@ -223,6 +338,7 @@ function handleButtonClick(buttonKey) {
   }
 }
 
+// Render Virus by draw coronavirus.png
 function renderViruses() {
   // Draw columns
   ctx.fillStyle = "#999999";
@@ -241,6 +357,7 @@ function renderViruses() {
   renderButtons();
 }
 
+// Handle keyboard user input
 function handleUserInput(key) {
   for (let i = 0; i < viruses.length; i++) {
     const virus = viruses[i];
@@ -256,13 +373,14 @@ function handleUserInput(key) {
   }
 }
 
+// Update Score
 function updateScore() {
   gameScore.textContent = `Score : ${score}`;
   gameFail.textContent = `Fail : ${failCount}`;
 }
 
+// Main game function
 function gameLoop() {
-  // Check if the game is not paused
   if (!isPaused) {
     ctx.fillStyle = "#414141";
     ctx.fillRect(0, 0, canvas.width, canvas.height);

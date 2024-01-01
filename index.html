@@ -5,96 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virus Slayer</title>
     <style>
-        body {
-            background-color: #232323;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    body {
+        background-color: #232323;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        span {
-            font-size: 18px;
-            color: white;
-        }
+    span {
+        font-size: 18px;
+        color: white;
+    }
 
-        #game-wrapper {
-            align-items: center;
-            gap: 130px;
-        }
+    #game-wrapper {
+        align-items: center;
+        gap: 130px;
+    }
 
-        #span-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            min-width: 200px;
-        }
+    #span-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        min-width: 200px;
+    }
 
-        #game-board {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            background-color: #414141;
-            color: white;
-            padding: 24px;
-            border-radius: 8px;
-        }
+    #game-board {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        background-color: #414141;
+        color: white;
+        padding: 24px;
+        border-radius: 8px;
+    }
 
-        #game-board .span-little {
-            font-size: 18px;
-        }
+    #game-board .span-little {
+        font-size: 18px;
+    }
 
-        #game-start {
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 32px;
-            background-color: #414141;
-            color: white;
-        }
+    #game-start {
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 32px;
+        background-color: #414141;
+        color: white;
+    }
 
-        #game-instruction {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+    #game-pause {
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 32px;
+        background-color: #414141;
+        color: white;
+    }
 
-        #game-instruction-title {
-            font-size: 24px;
-            margin-bottom: 18px;
-            font-weight: bold;
-        }
+    #game-instruction {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 
-        #game-start-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-        }
+    #game-instruction-title {
+        font-size: 24px;
+        margin-bottom: 18px;
+        font-weight: bold;
+    }
 
-        #game-start-bottom button {
-            cursor: pointer;
-            padding: 8px;
-            background-color: red;
-            color: white;
-            font-weight: bold;
-            width: 50%;
-            border-radius: 4px;
-        }
+    #game-start-bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
 
-        #game-start input {
-            padding: 8px;
-            margin-top: 24px;
-            width: 100%;
-            border-radius: 4px;
-        }
+    #game-start-bottom button {
+        cursor: pointer;
+        padding: 8px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        width: 50%;
+        border-radius: 4px;
+    }
+
+    #game-pause-bottom {
+        display: flex;
+        flex-direction: row;
+        gap: 32px;
+    }
+
+    #game-pause-bottom button {
+        cursor: pointer;
+        padding: 8px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        width: 50%;
+        border-radius: 4px;
+    }
+
+    #game-pause-bottom button#continue-button {
+        cursor: pointer;
+        padding: 8px;
+        background-color: gray;
+        color: white;
+        font-weight: bold;
+        width: 50%;
+        border-radius: 4px;
+    }
+
+    #game-start input {
+        padding: 8px;
+        margin-top: 24px;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+
+    #game-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.786); 
+        display: none; 
+     }
+
+    #game-pause {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 24px;
+        text-align: center;
+        z-index: 1000;
+    }
+
+     #game-over {
+        background-color: #414141;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 24px;
+        text-align: center;
+        z-index: 1000;
+    }
+
+    #game-over-bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    #game-over-bottom span {
+        color: white;
+        font-weight: 400;
+    }
+
+    #game-over-bottom button {
+        cursor: pointer;
+        padding: 8px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        width: 100%;
+        border-radius: 4px;
+    }
+
 
     </style>
 </head>
 <body>
     
+    <div id="game-overlay"></div>
+    
+    <div id="game-over">
+        <div id="game-instruction">
+            <span id="game-instruction-title">Game Over!</span>
+        </div>
+        <div id="game-over-bottom">
+            <span id="game-over-time">Time: </span>
+            <span id="game-over-score">Score: </span>
+            <span id="game-over-player">Player: </span>
+            <button type="submit" id="restart-button-game-over">Restart</button>
+        </div>
+    </div>
+    
+    <div id="game-pause">
+        <div id="game-instruction">
+            <span id="game-instruction-title">Paused</span>
+        </div>
+        <div id="game-pause-bottom">
+            <button type="submit" id="continue-button">Continue</button>
+            <button type="submit" id="restart-button-game-pause">Restart</button>
+        </div>
+    </div>
+
     <div id="game-start">
         <div id="game-instruction">
             <span id="game-instruction-title">Instruction Virus Slayer</span>
@@ -125,9 +241,8 @@
             </span>
             <div id="game-board">
                 <span>Virus Slayer</span>
-                <button class="span-little" id="restart-button">Restart</button>
+                <button class="span-little" id="restart-button-game-board">Restart</button>
                 <button class="span-little" id="quit-button">Quit</button>
-
             </div>
         </div>
         <canvas id="game-canvas"></canvas>
