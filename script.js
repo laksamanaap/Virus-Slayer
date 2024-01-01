@@ -76,7 +76,7 @@ continueButton.addEventListener("click", function (e) {
 });
 
 // Reset Game
-function resetGame() {
+const resetGame = () => {
   gameOver.style.display = "none";
   gameOverlay.style.display = "none";
 
@@ -94,7 +94,7 @@ function resetGame() {
 
   updateTimerDisplay();
   updateScore();
-}
+};
 
 // Reset game
 restartButtonOver.addEventListener("click", function (e) {
@@ -121,7 +121,7 @@ quitButton.addEventListener("click", function (e) {
 });
 
 // Pause game
-function togglePause() {
+const togglePause = () => {
   isPaused = !isPaused;
 
   // If paused, clear the interval
@@ -139,10 +139,10 @@ function togglePause() {
     intervalId = setInterval(gameLoop, 1000 / 60);
     console.log("Game resumed");
   }
-}
+};
 
 // Quit Game
-function quitGame() {
+const quitGame = () => {
   localStorage.setItem("final-score", score);
   localStorage.setItem(
     "final-time",
@@ -161,10 +161,10 @@ function quitGame() {
   updateScore();
 
   displayGameOver();
-}
+};
 
 // Display game over
-function displayGameOver() {
+const displayGameOver = () => {
   gamePause.style.display = "none";
   gameOverlay.style.display = "block";
   gameOver.style.display = "block";
@@ -180,7 +180,7 @@ function displayGameOver() {
   document.getElementById(
     "game-over-player"
   ).textContent = `Player: ${playerName}`;
-}
+};
 
 // Detect keyboard key
 document.addEventListener("keydown", function (event) {
@@ -198,7 +198,7 @@ document.addEventListener("keydown", function (event) {
 });
 
 // Start Timer
-function startTimer() {
+const startTimer = () => {
   intervalId = setInterval(() => {
     // Check if the game is not paused
     if (!isPaused) {
@@ -210,18 +210,18 @@ function startTimer() {
       updateTimerDisplay();
     }
   }, 1000);
-}
+};
 
 // Update Timer Display
-function updateTimerDisplay() {
+const updateTimerDisplay = () => {
   const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
     seconds
   ).padStart(2, "0")}`;
   gameTime.textContent = `Time : ${formattedTime}`;
-}
+};
 
 // Generate Virus
-function generateVirus() {
+const generateVirus = () => {
   const columnWidth = canvas.width / 4;
   const columnIndex = Math.floor(Math.random() * 4);
 
@@ -239,10 +239,10 @@ function generateVirus() {
     width: virusWidth,
     height: virusHeight,
   });
-}
+};
 
 // Generate Virus Positions
-function updateVirusPositions() {
+const updateVirusPositions = () => {
   for (let i = 0; i < viruses.length; i++) {
     viruses[i].y += viruses[i].speed;
 
@@ -253,10 +253,10 @@ function updateVirusPositions() {
       i--;
     }
   }
-}
+};
 
 // Render Button
-function renderButtons() {
+const renderButtons = () => {
   const buttonSize = canvas.width / 4;
 
   const buttonD = {
@@ -313,10 +313,10 @@ function renderButtons() {
       button.y + button.height / 2 + 10
     );
   });
-}
+};
 
 // Handle button when pressed
-function handleButtonClick(buttonKey) {
+const handleButtonClick = (buttonKey) => {
   console.log(buttonKey);
   const button = {
     x: (keyPosition[buttonKey] - 0.5) * (canvas.width / 4) - buttonSize / 2,
@@ -336,10 +336,10 @@ function handleButtonClick(buttonKey) {
       viruses.splice(i, 1);
     }
   }
-}
+};
 
 // Render Virus by draw coronavirus.png
-function renderViruses() {
+const renderViruses = () => {
   // Draw columns
   ctx.fillStyle = "#999999";
   for (let i = 1; i <= 3; i++) {
@@ -355,10 +355,10 @@ function renderViruses() {
 
   // Draw buttons
   renderButtons();
-}
+};
 
 // Handle keyboard user input
-function handleUserInput(key) {
+const handleUserInput = (key) => {
   for (let i = 0; i < viruses.length; i++) {
     const virus = viruses[i];
     const hitX =
@@ -371,16 +371,16 @@ function handleUserInput(key) {
       viruses.splice(i, 1);
     }
   }
-}
+};
 
 // Update Score
-function updateScore() {
+const updateScore = () => {
   gameScore.textContent = `Score : ${score}`;
   gameFail.textContent = `Fail : ${failCount}`;
-}
+};
 
 // Main game function
-function gameLoop() {
+const gameLoop = () => {
   if (!isPaused) {
     ctx.fillStyle = "#414141";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -390,4 +390,4 @@ function gameLoop() {
     updateScore();
     renderViruses();
   }
-}
+};
