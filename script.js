@@ -6,6 +6,9 @@ const gameScore = document.getElementById("game-score");
 const gameFail = document.getElementById("game-fail");
 const gamePlayer = document.getElementById("game-user");
 
+const restartButton = document.getElementById("restart-button");
+const quitButton = document.getElementById("quit-button");
+
 let intervalId;
 let seconds = 0;
 let minutes = 0;
@@ -45,7 +48,8 @@ document.getElementById("start-game").addEventListener("click", function (e) {
     gameTime.textContent = `Time : ${formattedTime}`;
   };
 
-  startTimer();
+  // Update Score
+  const updateScore = () => {};
 
   // Init Game
   const canvas = document.getElementById("game-canvas");
@@ -56,4 +60,6 @@ document.getElementById("start-game").addEventListener("click", function (e) {
 
   ctx.fillStyle = "#414141";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  startTimer();
 });
