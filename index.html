@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Virus Slayer</title>
     <style>
         body {
             background-color: #232323;
@@ -14,12 +14,11 @@
         }
 
         span {
-            font-size: 28px;
+            font-size: 18px;
             color: white;
         }
 
         #game-wrapper {
-            display: flex;
             align-items: center;
             gap: 130px;
         }
@@ -28,6 +27,7 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
+            min-width: 200px;
         }
 
         #game-board {
@@ -44,22 +44,83 @@
             font-size: 18px;
         }
 
+        #game-start {
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 32px;
+            background-color: #414141;
+            color: white;
+        }
+
+        #game-instruction {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #game-instruction-title {
+            font-size: 24px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        #game-start-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #game-start-bottom button {
+            cursor: pointer;
+            padding: 8px;
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            width: 50%;
+            border-radius: 4px;
+        }
+
+        #game-start input {
+            padding: 8px;
+            margin-top: 24px;
+            width: 100%;
+            border-radius: 4px;
+        }
+
     </style>
 </head>
 <body>
     
+    <div id="game-start">
+        <div id="game-instruction">
+            <span id="game-instruction-title">Instruction Virus Slayer</span>
+            <span>1. Input Username and Click Play</span>
+            <span>2. Destroy Virus with D F J K keyboard key</span>
+            <span>3. Reach high score</span>
+            <span>4. Enjoy</span>
+        </div>
+        <form id="game-start-bottom">
+            <input type="text" id="player-name" placeholder="Input your name" required>
+            <button type="submit" id="start-game">Play</button>
+        </form>
+    </div>
+
     <div id="game-wrapper">
         <div id="span-wrapper">
-            <span id="time">
+            <span id="game-time">
                 Time : 
             </span>
-            <span id="time">
+            <span id="game-score">
                 Score :
             </span>
-            <span id="time">
+            <span id="game-fail">
                 Fail :
             </span>
-            <span id="time">
+            <span id="game-user">
                 Player Name :
             </span>
             <div id="game-board">
