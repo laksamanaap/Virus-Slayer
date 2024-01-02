@@ -15,6 +15,8 @@ const restartBoardPause = document.getElementById("restart-button-game-pause");
 const restartButtonBoard = document.getElementById("restart-button-game-board");
 const quitButton = document.getElementById("quit-button");
 
+let timeInterval;
+
 let intervalId;
 let seconds = 0;
 let minutes = 0;
@@ -60,7 +62,7 @@ document.getElementById("start-game").addEventListener("click", function (e) {
   canvas.width = 400;
   canvas.height = 600;
 
-  startTimer();
+  timeInterval = setInterval(startTimer, 1000);
 
   // Start generating viruses
   virusGenerationInterval = setInterval(generateVirus, 2000); // Adjust the interval as needed
@@ -90,6 +92,7 @@ const resetGame = () => {
   clearInterval(virusInterval);
 
   virusInterval = setInterval(generateVirus, 2000);
+  timeInterval = setInterval(startTimer, 1000);
 
   updateTimerDisplay();
   updateScore();
@@ -152,13 +155,15 @@ const quitGame = () => {
 
   clearInterval(virusGenerationInterval);
   clearInterval(virusInterval);
-  viruses = [];
-
+  clearInterval(timeInterval);
   seconds = 0;
   minutes = 0;
+  score = 0;
+
+  viruses = [];
+
   updateTimerDisplay();
 
-  score = 0;
   updateScore();
 
   displayGameOver();
@@ -200,17 +205,15 @@ document.addEventListener("keydown", function (event) {
 
 // Start Timer
 const startTimer = () => {
-  intervalId = setInterval(() => {
-    // Check if the game is not paused
-    if (!isPaused) {
-      seconds++;
-      if (seconds === 60) {
-        minutes++;
-        seconds = 0;
-      }
-      updateTimerDisplay();
+  // Check if the game is not paused
+  if (!isPaused) {
+    seconds++;
+    if (seconds === 60) {
+      minutes++;
+      seconds = 0;
     }
-  }, 1000);
+    updateTimerDisplay();
+  }
 };
 
 // Update Timer Display
@@ -225,6 +228,7 @@ const updateTimerDisplay = () => {
 const generateVirus = () => {
   const columnWidth = canvas.width / 4;
   const columnIndex = Math.floor(Math.random() * 4);
+  console.log(columnIndex);
 
   const virus = new Image();
   virus.src = "images/coronavirus.png";
@@ -315,29 +319,6 @@ const renderButtons = () => {
     );
   });
 };
-
-// Handle button when pressed
-// const handleButtonClick = (buttonKey) => {
-//   console.log(buttonKey);
-//   const button = {
-//     x: (keyPosition[buttonKey] - 0.5) * (canvas.width / 4) - buttonSize / 2,
-//     y: canvas.height - buttonSize,
-//     width: buttonSize,
-//     height: buttonSize,
-//   };
-
-//   for (let i = 0; i < viruses.length; i++) {
-//     const virus = viruses[i];
-//     const hitX = virus.x <= button.x + button.width && button.x <= virus.x + 50;
-//     const hitY =
-//       virus.y <= canvas.height - 30 && canvas.height - 30 <= virus.y + 50;
-
-//     if (hitX && hitY) {
-//       score++;
-//       viruses.splice(i, 1);
-//     }
-//   }
-// };
 
 // Render Virus by draw coronavirus.png
 const renderViruses = () => {
