@@ -15,9 +15,9 @@ const restartBoardPause = document.getElementById("restart-button-game-pause");
 const restartButtonBoard = document.getElementById("restart-button-game-board");
 const quitButton = document.getElementById("quit-button");
 
-let timeInterval;
-
 let intervalId;
+
+let timeInterval;
 let seconds = 0;
 let minutes = 0;
 
@@ -236,14 +236,24 @@ const generateVirus = () => {
   const virusWidth = 50;
   const virusHeight = 50;
 
-  viruses.push({
-    image: virus,
-    x: columnIndex * columnWidth + (columnWidth - virusWidth) / 2,
-    y: 0,
-    speed: 5,
-    width: virusWidth,
-    height: virusHeight,
-  });
+  viruses.push(
+    {
+      image: virus,
+      x: columnIndex * columnWidth + (columnWidth - virusWidth) / 2,
+      y: 0,
+      speed: 5,
+      width: virusWidth,
+      height: virusHeight,
+    },
+    {
+      image: virus,
+      x: (columnWidth - virusWidth) / 4,
+      y: 0,
+      speed: 5,
+      width: virusWidth,
+      height: virusHeight,
+    }
+  );
 };
 
 // Generate Virus Positions
@@ -254,7 +264,7 @@ const updateVirusPositions = () => {
     // Handle Viruses via y-axis
     if (viruses[i].y > canvas.height) {
       failCount++;
-      viruses.splice(i, 1);
+      viruses.splice(i, 2);
       i--;
     }
   }
@@ -326,7 +336,7 @@ const renderViruses = () => {
   ctx.fillStyle = "#999999";
   for (let i = 1; i <= 3; i++) {
     const columnX = i * (canvas.width / 4);
-    ctx.fillRect(columnX - 2, 0, 4, canvas.height);
+    ctx.fillRect(columnX - 2, 0, 3, canvas.height);
   }
 
   // Draw viruses
@@ -350,8 +360,9 @@ const handleUserInput = (key) => {
       virus.y <= canvas.height - 150 && canvas.height - 150 <= virus.y + 50;
 
     if (hitX && hitY) {
+      console.log("kena lo!");
       score++;
-      viruses.splice(i, 1);
+      viruses.splice(i, 2);
     }
   }
 };
