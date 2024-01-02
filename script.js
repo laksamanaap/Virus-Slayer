@@ -15,8 +15,6 @@ const restartBoardPause = document.getElementById("restart-button-game-pause");
 const restartButtonBoard = document.getElementById("restart-button-game-board");
 const quitButton = document.getElementById("quit-button");
 
-// console.log(restartBoard);
-
 let intervalId;
 let seconds = 0;
 let minutes = 0;
@@ -79,6 +77,7 @@ continueButton.addEventListener("click", function (e) {
 const resetGame = () => {
   gameOver.style.display = "none";
   gameOverlay.style.display = "none";
+  gamePause.style.display = "none";
 
   console.log("restarted");
   seconds = 0;
@@ -94,6 +93,8 @@ const resetGame = () => {
 
   updateTimerDisplay();
   updateScore();
+
+  // window.location.reload();
 };
 
 // Reset game
@@ -300,7 +301,7 @@ const renderButtons = () => {
 
   // Draw buttons
   buttons.forEach((button) => {
-    const opacity = button.isShining ? 0.5 : 1.0;
+    const opacity = button.isShining ? 1.0 : 0.7;
 
     ctx.fillStyle = `rgba(128, 128, 128, ${opacity})`;
     ctx.fillRect(button.x, button.y, button.width, button.height);
@@ -316,27 +317,27 @@ const renderButtons = () => {
 };
 
 // Handle button when pressed
-const handleButtonClick = (buttonKey) => {
-  console.log(buttonKey);
-  const button = {
-    x: (keyPosition[buttonKey] - 0.5) * (canvas.width / 4) - buttonSize / 2,
-    y: canvas.height - buttonSize,
-    width: buttonSize,
-    height: buttonSize,
-  };
+// const handleButtonClick = (buttonKey) => {
+//   console.log(buttonKey);
+//   const button = {
+//     x: (keyPosition[buttonKey] - 0.5) * (canvas.width / 4) - buttonSize / 2,
+//     y: canvas.height - buttonSize,
+//     width: buttonSize,
+//     height: buttonSize,
+//   };
 
-  for (let i = 0; i < viruses.length; i++) {
-    const virus = viruses[i];
-    const hitX = virus.x <= button.x + button.width && button.x <= virus.x + 50;
-    const hitY =
-      virus.y <= canvas.height - 30 && canvas.height - 30 <= virus.y + 50;
+//   for (let i = 0; i < viruses.length; i++) {
+//     const virus = viruses[i];
+//     const hitX = virus.x <= button.x + button.width && button.x <= virus.x + 50;
+//     const hitY =
+//       virus.y <= canvas.height - 30 && canvas.height - 30 <= virus.y + 50;
 
-    if (hitX && hitY) {
-      score++;
-      viruses.splice(i, 1);
-    }
-  }
-};
+//     if (hitX && hitY) {
+//       score++;
+//       viruses.splice(i, 1);
+//     }
+//   }
+// };
 
 // Render Virus by draw coronavirus.png
 const renderViruses = () => {
@@ -359,12 +360,13 @@ const renderViruses = () => {
 
 // Handle keyboard user input
 const handleUserInput = (key) => {
+  // console.log(key);
   for (let i = 0; i < viruses.length; i++) {
     const virus = viruses[i];
     const hitX =
       virus.x <= keyPosition[key] && keyPosition[key] <= virus.x + 50;
     const hitY =
-      virus.y <= canvas.height - 75 && canvas.height - 75 <= virus.y + 50;
+      virus.y <= canvas.height - 150 && canvas.height - 150 <= virus.y + 50;
 
     if (hitX && hitY) {
       score++;
@@ -379,6 +381,15 @@ const updateScore = () => {
   gameFail.textContent = `Fail : ${failCount}`;
 };
 
+// Render destroy square
+const renderDestroyBox = () => {
+  const destroyBoxWidth = canvas.width;
+  const destroyBoxHeight = canvas.height / 4 / 2;
+
+  ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+  ctx.fillRect(0, 425, destroyBoxWidth, destroyBoxHeight);
+};
+
 // Main game function
 const gameLoop = () => {
   if (!isPaused) {
@@ -387,7 +398,9 @@ const gameLoop = () => {
 
     updateVirusPositions();
     handleUserInput();
-    updateScore();
     renderViruses();
+    renderButtons();
+    renderDestroyBox();
+    updateScore();
   }
 };
